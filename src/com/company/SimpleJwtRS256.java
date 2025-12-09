@@ -28,7 +28,7 @@ public class SimpleJwtRS256 {
         String unsignedToken = header + "." + payload;
 
 
-        Signature rsa = Signature.getInstance("SHA256withRSA")å;
+        Signature rsa = Signature.getInstance("SHA256withRSA");
         rsa.initSign(privateKey);
         rsa.update(unsignedToken.getBytes(StandardCharsets.UTF_8));
         byte[] signatureBytes = rsa.sign();
