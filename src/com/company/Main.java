@@ -14,7 +14,7 @@ public class Main {
                     arr[j + 1] = temp;
                 }
             }
-        }commit
+        }
     }
 
     // 2. Selection Sort
