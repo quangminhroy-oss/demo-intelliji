@@ -56,22 +56,16 @@ public class SimpleJwtRS256 {
         String unsignedToken = header + "." + payload;
 
 
-        Signature rsa = Signature.getInstance("SHA256withRSA");
-        rsa.initSign(privateKey);
-        rsa.update(unsignedToken.getBytes(StandardCharsets.UTF_8));
-        byte[] signatureBytes = rsa.sign();
 
-        String signature = Base64.getUrlEncoder().withoutPadding()
-                .encodeToString(signatureBytes);
 
-        String jwt = unsignedToken + "." + signature;
+        //String jwt = unsignedToken + "." + signature;
 
 
         System.out.println("\nHeader: " + header);
         System.out.println("Payload: " + payload);
-        System.out.println("Signature: " + signature);
+        //System.out.println("Signature: " + signature);
 
         System.out.println("\nFULL JWT:");
-        System.out.println(jwt);
+        //System.out.println(jwt);
     }
 }
