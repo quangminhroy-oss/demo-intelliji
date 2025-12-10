@@ -4,45 +4,23 @@ import java.util.Base64;
 import java.nio.charset.StandardCharsets;
 import java.math.BigInteger;
 
-public class SimpleJwtRS256 {
+public class JWT {
 
     public static void main(String[] args) throws Exception {
-
-
-
 
         BigInteger p = BigInteger.valueOf(61);
         BigInteger q = BigInteger.valueOf(53);
 
-
         BigInteger n = p.multiply(q);
 
-        // Tính phi(n) = (p - 1)(q - 1)
         BigInteger one = BigInteger.ONE;
+        BigInteger phi = (p.subtract(one)).multiply(q.subtract(one));
 
-        BigInteger phi = (p.subtract(one))
-                .multiply(q.subtract(one));
-
-
-        // Chọn số mũ e
         BigInteger e = BigInteger.valueOf(17);
-
-        // Tính d = e^-1 mod phi
         BigInteger d = e.modInverse(phi);
 
-        // In khoá
         System.out.println("PUBLIC KEY (e, n) = (" + e + ", " + n + ")");
         System.out.println("PRIVATE KEY (d, n) = (" + d + ", " + n + ")");
-
-
-        KeyFactory factory = KeyFactory.getInstance("RSA");
-
-        RSAPublicKeySpec pubSpec = new RSAPublicKeySpec(n, e);
-        PublicKey publicKey = factory.generatePublic(pubSpec);
-
-        RSAPrivateKeySpec privSpec = new RSAPrivateKeySpec(n, d);
-        PrivateKey privateKey = factory.generatePrivate(privSpec);
-
 
         String headerJson = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
         String payloadJson = "{\"sub\":\"user123\",\"role\":\"admin\"}";
@@ -58,8 +36,27 @@ public class SimpleJwtRS256 {
 
 
 
-        //String jwt = unsignedToken + "." + signature;
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(unsignedToken.getBytes(StandardCharsets.UTF_8));
 
+
+
+
+        BigInteger hashInt = new BigInteger(1, hash);
+
+
+
+        BigInteger signatureInt = hashInt.modPow(d, n);
+
+
+
+        String signature = Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(signatureInt.toByteArray());
+
+
+
+
+        //String jwt = unsignedToken + "." + signature;
 
         System.out.println("\nHeader: " + header);
         System.out.println("Payload: " + payload);
